@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance.js";
@@ -16,14 +15,12 @@ const Login = () => {
     try {
       const res = await axiosInstance.post("/auth/login", { email, password });
 
-      // আমাদের কন্টেক্সটের login ফাংশনে ইউজার ডেটা আর টোকেন পাঠিয়ে দেওয়া
       login(res.data.user, res.data.token);
 
       toast.success("Login Successful!");
 
-      // ইউজার যদি এডমিন হয় তবে এডমিন ড্যাশবোর্ডে যাবে, নাহলে হোমে
       if (res.data.user.role === "admin") {
-        navigate("/admin");
+        navigate("/dashboard");
       } else {
         navigate("/");
       }
@@ -32,56 +29,102 @@ const Login = () => {
     }
   };
 
+  // 💡 ডেমো লগইন হ্যান্ডলার ফাংশন
+  const handleDemoLogin = (type) => {
+    if (type === "admin") {
+      setEmail("admin@gmail.com");
+      setPassword("Noman123");
+    } else if (type === "customer") {
+      setEmail("customer@gmail.com");
+      setPassword("Noman123");
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Login
-        </h2>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+    <div className="flex justify-center items-center min-h-[80vh] bg-[#fafafa] px-4">
+      <div className="w-full max-w-sm premium-card p-8 bg-white">
+        {/* Header */}
+        <div className="mb-6 text-center">
+          <h2 className="text-xl font-bold tracking-tight text-neutral-800">
+            Welcome Back
+          </h2>
+          <p className="text-neutral-500 text-xs mt-1">
+            Enter your credentials to access your account
+          </p>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
+        {/* Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-neutral-600 text-xs font-semibold mb-1.5 uppercase tracking-wider">
+              Email Address
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              className="w-full p-2.5 text-sm bg-neutral-50/50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-400 focus:bg-white transition-all placeholder:text-neutral-400"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-neutral-600 text-xs font-semibold mb-1.5 uppercase tracking-wider">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full p-2.5 text-sm bg-neutral-50/50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-400 focus:bg-white transition-all placeholder:text-neutral-400"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full btn-primary py-2.5 text-sm font-bold shadow-xs active:scale-[0.99] transition-transform"
+          >
+            Sign In
+          </button>
+        </form>
+
+        {/* 🛠️ DEMO LOGIN BUTTONS */}
+        <div className="mt-6 pt-6 border-t border-neutral-100 space-y-2">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-neutral-400 text-center mb-3">
+            Quick Demo Login
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button" // type="button" দেওয়া খুবই জরুরি, নাহলে ফর্ম সাবমিট হয়ে যাবে
+              onClick={() => handleDemoLogin("admin")}
+              className="px-3 py-2 text-xs font-medium text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 hover:border-neutral-300 transition active:scale-[0.98] cursor-pointer"
+            >
+              🔑 Admin Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemoLogin("customer")}
+              className="px-3 py-2 text-xs font-medium text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 hover:border-neutral-300 transition active:scale-[0.98] cursor-pointer"
+            >
+              👤 Customer Demo
+            </button>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition duration-200"
-        >
-          Login
-        </button>
-
-        <p className="mt-4 text-sm text-center text-gray-600">
+        {/* Footer Link */}
+        <p className="mt-6 text-xs text-center text-neutral-500">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
+          <Link
+            to="/register"
+            className="text-neutral-800 font-semibold hover:underline"
+          >
             Register here
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import AuthContext from "../provider/authContext";
 import axiosInstance from "../utils/axiosInstance";
 
-const Cart = () => {
+const Card = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -82,10 +82,8 @@ const Cart = () => {
 
       const payhereForm = document.createElement("form");
       payhereForm.method = "POST";
-      payhereForm.action =
-        "https://fancy-aliens-warn.loca.lt/api/payment/notify";
+      payhereForm.action = "https://hip-paths-brake.loca.lt/api/payment/notify";
 
-      // for...in এর বদলে অবজেক্ট এন্ট্রিজ ম্যাপিং (React Compiler এর জন্য বেশি অপ্টিমাইজড)
       Object.entries(params).forEach(([key, value]) => {
         const hiddenField = document.createElement("input");
         hiddenField.type = "hidden";
@@ -199,4 +197,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Card;

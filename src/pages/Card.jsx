@@ -6,6 +6,7 @@ import axiosInstance from "../utils/axiosInstance";
 
 const Card = () => {
   const { user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState(() => {
@@ -28,14 +29,14 @@ const Card = () => {
       localStorage.setItem("cart", JSON.stringify(updated));
     }
   };
+
   const removeFromCart = (id) => {
     const updatedCart = cartItems.filter((item) => item.food._id !== id);
-
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     toast.success("Item removed from cart");
   };
+
   const handleCheckout = async () => {
     if (!user) {
       toast.error("Please login to place an order");
@@ -55,34 +56,34 @@ const Card = () => {
         })),
         totalAmount,
       };
-
       const res = await axiosInstance.post("/orders", orderData);
       const { payhereOrderId } = res.data.order;
 
       toast.success("Order initiated! Redirecting to PayHere...");
 
-      // React Compiler-এর জন্য সেফ অবজেক্ট ম্যাপিং
       const params = {
-        merchant_id: "1234567",
+        merchant_id: import.meta.env.VITE_PAYHERE_MERCHANT_ID,
         return_url: "http://localhost:5173/payment-success",
         cancel_url: "http://localhost:5173/payment-cancel",
-        notify_url: "https://your-localtunnel-url.loca.lt/api/payment/notify", // আপনার Webhook URL
+        notify_url: "https://two-peaches-dance.loca.lt/api/payment/notify",
         order_id: payhereOrderId,
         items: "Food Order",
-        amount: totalAmount.toString(), // টাইপ সেফটি নিশ্চিত করতে স্ট্রিং করা হলো
+        amount: totalAmount.toFixed(2).toString(),
         currency: "LKR",
         first_name: user.name,
         last_name: "Customer",
         email: user.email,
-        phone: user.phone || "01700000000",
+        phone: user.phone || "",
         address: "Dhaka, Bangladesh",
         city: "Dhaka",
         country: "Bangladesh",
       };
+      console.log(params.notify_url);
 
       const payhereForm = document.createElement("form");
       payhereForm.method = "POST";
-      payhereForm.action = "https://hip-paths-brake.loca.lt/api/payment/notify";
+      // Official Sandbox Endpoint
+      payhereForm.action = "https://sandbox.payhere.lk/pay/checkout";
 
       Object.entries(params).forEach(([key, value]) => {
         const hiddenField = document.createElement("input");
@@ -93,9 +94,8 @@ const Card = () => {
       });
 
       document.body.appendChild(payhereForm);
-      payhereForm.submit();
 
-      // ক্লিনআপ এবং স্টেট আপডেট
+      payhereForm.submit();
       localStorage.removeItem("cart");
       setCartItems([]);
     } catch (error) {
@@ -103,96 +103,113 @@ const Card = () => {
       console.error(error);
     }
   };
-
   return (
-    <div className="max-w-4xl mx-auto p-6 min-h-screen bg-white shadow-lg rounded-xl mt-6">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">
-        Your Shopping Cart
-      </h2>
+    <div className="min-h-screen py-12 px-4">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-xl font-bold tracking-tight text-neutral-900 mb-6">
+          Shopping Cart ({cartItems.length})
+        </h2>
 
-      {cartItems.length === 0 ? (
-        <div className="text-center py-10 text-gray-500 text-lg">
-          Your cart is empty. Go add some food!
-        </div>
-      ) : (
-        <div>
-          <div className="space-y-4">
-            {cartItems.map((item) => (
-              <div
-                key={item.food._id}
-                className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300"
-              >
-                {/* Left */}
-                <div className="flex items-center gap-4">
-                  <img
-                    src={item.food.image}
-                    alt={item.food.name}
-                    className="w-24 h-24 rounded-xl object-cover"
-                  />
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {item.food.name}
-                    </h3>
-
-                    <p className="text-sm text-gray-500 mt-1">
-                      ${item.food.price} each
-                    </p>
-
-                    <p className="mt-2 font-semibold text-blue-600">
-                      amount: totalAmount.toFixed(2).toString()
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right */}
-                <div className="flex flex-col items-end gap-4">
-                  <button
-                    onClick={() => removeFromCart(item.food._id)}
-                    className="text-red-500 hover:text-red-600 text-sm font-medium"
-                  >
-                    Delete
-                  </button>
-
-                  <div className="flex items-center bg-gray-100 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() =>
-                        updateQuantity(item.food._id, item.quantity - 1)
-                      }
-                      className="px-3 py-2 hover:bg-gray-200 transition"
-                    >
-                      −
-                    </button>
-
-                    <span className="px-4 font-semibold">{item.quantity}</span>
-
-                    <button
-                      onClick={() =>
-                        updateQuantity(item.food._id, item.quantity + 1)
-                      }
-                      className="px-3 py-2 hover:bg-gray-200 transition"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+        {cartItems.length === 0 ? (
+          /* Empty State Dashboard Window */
+          <div className="text-center py-16 premium-card max-w-sm mx-auto p-6">
+            <h3 className="text-sm font-semibold text-neutral-800">
+              Your cart is empty
+            </h3>
+            <p className="text-neutral-500 text-xs mt-1">
+              Go add some delicious food from menu!
+            </p>
           </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Items List Wrapper */}
+            <div className="space-y-3">
+              {cartItems.map((item) => (
+                <div
+                  key={item.food._id}
+                  className="premium-card p-4 flex items-center justify-between gap-4"
+                >
+                  {/* Left Side: Image & Food Info */}
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={item.food.image}
+                      alt={item.food.name}
+                      className="w-16 h-16 rounded-xl object-cover border border-neutral-100"
+                      loading="lazy"
+                    />
+                    <div>
+                      <h3 className="text-sm font-bold text-neutral-900">
+                        {item.food.name}
+                      </h3>
+                      <p className="text-xs text-neutral-400 mt-0.5">
+                        ${Number(item.food.price).toFixed(2)} each
+                      </p>
+                      {/* Subtotal Display Metrics */}
+                      <p className="text-xs font-mono font-bold text-neutral-800 mt-2">
+                        Subtotal: $
+                        {(item.food.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
 
-          <div className="mt-8 flex flex-col items-end border-t pt-6">
-            <div className="text-2xl font-bold text-gray-900 mb-4">
-              Total Amount: ${totalAmount}
+                  {/* Right Side: Action Controller Elements */}
+                  <div className="flex flex-col items-end gap-3">
+                    {/* Clean Minimal Destructive Action Button */}
+                    <button
+                      onClick={() => removeFromCart(item.food._id)}
+                      className="btn-destructive text-[11px]"
+                    >
+                      Remove
+                    </button>
+
+                    {/* Quantity Selector Interface Grid */}
+                    <div className="flex items-center border border-neutral-200 rounded-lg bg-neutral-50/50 overflow-hidden">
+                      <button
+                        onClick={() =>
+                          updateQuantity(item.food._id, item.quantity - 1)
+                        }
+                        className="px-2.5 py-1 text-sm text-neutral-500 hover:bg-neutral-100 transition active:bg-neutral-200 cursor-pointer"
+                      >
+                        −
+                      </button>
+                      <span className="px-3 text-xs font-bold text-neutral-800 select-none">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() =>
+                          updateQuantity(item.food._id, item.quantity + 1)
+                        }
+                        className="px-2.5 py-1 text-sm text-neutral-500 hover:bg-neutral-100 transition active:bg-neutral-200 cursor-pointer"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <button
-              onClick={handleCheckout}
-              className="bg-green-600 text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-green-700 transition duration-200 shadow-md"
-            >
-              Proceed to Pay
-            </button>
+
+            {/* Summary Block & Core Form Submission */}
+            <div className=" p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">
+                  Total Payable Amount
+                </span>
+                <span className="text-2xl font-mono font-black text-neutral-900 mt-0.5 block">
+                  ${totalAmount.toFixed(2)}
+                </span>
+              </div>
+
+              <button
+                onClick={handleCheckout}
+                className="btn-primary py-3 px-6 text-sm active:scale-[0.99]"
+              >
+                Proceed to PayHere
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

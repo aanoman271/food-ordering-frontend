@@ -15,7 +15,6 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      // ব্যাকএন্ড স্কিমা অনুযায়ী name, email, phone, password পাঠানো হচ্ছে
       const res = await axiosInstance.post("/auth/register", {
         name,
         email,
@@ -23,7 +22,6 @@ const Register = () => {
         password,
       });
 
-      // রেজিস্ট্রেশন সফল হলে সরাসরি লগইন স্টেট সিঙ্ক করা
       login(res.data.user, res.data.token);
 
       toast.success("Account Created Successfully!");
@@ -76,7 +74,6 @@ const Register = () => {
             />
           </div>
 
-          {/* 💡 ফোন নাম্বার ইনপুট ফিল্ড (স্কিমা রেডি) */}
           <div>
             <label className="block text-neutral-600 text-xs font-semibold mb-1.5 uppercase tracking-wider">
               Phone Number

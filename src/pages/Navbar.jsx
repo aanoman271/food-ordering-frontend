@@ -21,66 +21,65 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-white border-b border-neutral-200/60 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
+        {/* Logo System Implementation */}
         <Link
           to="/"
-          className="text-2xl font-black text-blue-600 tracking-tight"
+          className="text-lg font-black text-neutral-900 tracking-tight"
         >
-          Food<span className="text-gray-800">Express</span>
+          Ledger<span className="text-neutral-400 font-normal">Food</span>
         </Link>
 
-        {/* Links */}
+        {/* Global Navigation Target Links */}
         <div className="flex items-center gap-6">
           <Link
             to="/"
-            className="text-gray-600 hover:text-blue-600 font-medium transition"
+            className="text-neutral-500 hover:text-neutral-900 text-xs font-semibold transition-colors"
           >
             Home
           </Link>
 
           <Link
             to="/card"
-            className="relative text-gray-600 hover:text-blue-600 font-medium transition"
+            className="relative text-neutral-500 hover:text-neutral-900 text-xs font-semibold transition-colors"
           >
-            🛒 Cart
+            Cart
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold animate-pulse">
+              <span className="absolute -top-1.5 -right-3.5 bg-neutral-900 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-mono font-bold">
                 {cartCount}
               </span>
             )}
           </Link>
 
-          {/* Condition Based UI: User Profile/Login */}
+          {/* Conditional Control Pipeline for Authentication Status */}
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+              <span className="badge-minimal bg-neutral-50">
                 {user.name} {user.role === "admin" && "(Admin)"}
               </span>
+
               {user.role === "admin" && (
                 <Link
                   to="/dashboard"
-                  className="text-sm text-blue-600 hover:underline font-medium"
+                  className="text-xs text-neutral-900 hover:underline font-semibold"
                 >
                   Dashboard
                 </Link>
               )}
+
               <button
                 onClick={() => {
                   logout();
                   navigate("/login");
                 }}
-                className="text-sm font-bold text-red-500 hover:text-red-600 transition"
+                className="btn-destructive text-xs"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded-xl font-medium hover:bg-blue-700 transition"
-            >
+            <Link to="/login" className="btn-primary text-xs !py-2 !px-4">
               Login
             </Link>
           )}

@@ -34,30 +34,19 @@ const AddNewFood = () => {
   };
 
   return (
-    <div className="mx-auto">
-      {/* Side Content Hidden on Mobile
-      <div className="hidden lg:block">
-        <div className="bg-[#fcfcfb] border border-[#e5e5e0] rounded-2xl p-6 text-xs text-[#73736d] space-y-3 font-mono">
-          <p className="font-bold text-[#1a1a1a] text-sm mb-2 font-sans">
-            Guidelines
-          </p>
-          <p>• Prices must be in USD format.</p>
-          <p>• Ensure image links are high-res direct URLs.</p>
-          <p>• Categorize properly for ledger audit.</p>
-        </div>
-      </div> */}
-
-      {/* Main Form Area */}
-      <div className="lg:col-span-3 bg-white border border-[#e5e5e0] rounded-2xl p-6 sm:p-8 shadow-sm">
+    <div className="mx-auto max-w-3xl">
+      {/* Main Content Card Layout */}
+      <div className="premium-card p-6 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-xl font-bold tracking-tight text-[#1a1a1a]">
+          <h2 className="text-xl font-bold tracking-tight text-neutral-900">
             Add New Food Entry
           </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Item Name Input Field */}
           <div>
-            <label className="block text-xs font-mono text-[#a3a39e] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider mb-2">
               Food Title
             </label>
             <input
@@ -66,14 +55,15 @@ const AddNewFood = () => {
               onChange={handleChange}
               type="text"
               placeholder="Artisan Sourdough"
-              className="w-full bg-[#fcfcfb] border border-[#e5e5e0] rounded-xl p-3 text-sm outline-none focus:border-[#1a1a1a] focus:bg-white transition-all shadow-[inner_0_1px_2px_rgba(0,0,0,0.01)]"
+              className="ledger-input"
               required
             />
           </div>
 
+          {/* Pricing and Categorization Grid Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono text-[#a3a39e] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider mb-2">
                 Price ($)
               </label>
               <input
@@ -82,13 +72,14 @@ const AddNewFood = () => {
                 onChange={handleChange}
                 type="number"
                 min="1"
+                step="0.01"
                 placeholder="12.50"
-                className="w-full bg-[#fcfcfb] border border-[#e5e5e0] rounded-xl p-3 text-sm outline-none focus:border-[#1a1a1a] focus:bg-white transition-all"
+                className="ledger-input"
                 required
               />
             </div>
             <div>
-              <label className="block text-xs font-mono text-[#a3a39e] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider mb-2">
                 Category
               </label>
               <input
@@ -97,14 +88,15 @@ const AddNewFood = () => {
                 onChange={handleChange}
                 type="text"
                 placeholder="Bakery"
-                className="w-full bg-[#fcfcfb] border border-[#e5e5e0] rounded-xl p-3 text-sm outline-none focus:border-[#1a1a1a] focus:bg-white transition-all"
+                className="ledger-input"
                 required
               />
             </div>
           </div>
 
+          {/* Media Location Source Asset Input */}
           <div>
-            <label className="block text-xs font-mono text-[#a3a39e] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider mb-2">
               Image URL
             </label>
             <input
@@ -113,13 +105,14 @@ const AddNewFood = () => {
               onChange={handleChange}
               type="text"
               placeholder="https://images.unsplash.com/..."
-              className="w-full bg-[#fcfcfb] border border-[#e5e5e0] rounded-xl p-3 text-sm outline-none focus:border-[#1a1a1a] focus:bg-white transition-all"
+              className="ledger-input"
               required
             />
           </div>
 
+          {/* Longform Text Description Input Area */}
           <div>
-            <label className="block text-xs font-mono text-[#a3a39e] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider mb-2">
               Description
             </label>
             <textarea
@@ -128,15 +121,16 @@ const AddNewFood = () => {
               onChange={handleChange}
               rows="4"
               placeholder="Enter comprehensive item details..."
-              className="w-full bg-[#fcfcfb] border border-[#e5e5e0] rounded-xl p-3 text-sm outline-none focus:border-[#1a1a1a] focus:bg-white transition-all resize-none"
+              className="ledger-input resize-none"
               required
             />
           </div>
 
+          {/* Form Action Controls and Submission Pipeline */}
           <div className="flex justify-end pt-2">
             <button
               disabled={submitting}
-              className="w-full sm:w-auto bg-[#1a1a1a] text-white px-8 py-3 rounded-xl text-sm font-medium hover:bg-[#333333] active:scale-[0.98] disabled:opacity-30 disabled:pointer-events-none transition-all shadow-sm"
+              className="btn-primary w-full sm:w-auto px-8 py-3 disabled:opacity-30 disabled:pointer-events-none"
             >
               {submitting ? "Processing..." : "Commit Entry"}
             </button>

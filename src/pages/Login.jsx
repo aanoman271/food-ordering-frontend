@@ -29,7 +29,6 @@ const Login = () => {
     }
   };
 
-  // 💡 ডেমো লগইন হ্যান্ডলার ফাংশন
   const handleDemoLogin = (type) => {
     if (type === "admin") {
       setEmail("admin@gmail.com");
@@ -98,7 +97,7 @@ const Login = () => {
           </p>
           <div className="grid grid-cols-2 gap-3">
             <button
-              type="button" // type="button" দেওয়া খুবই জরুরি, নাহলে ফর্ম সাবমিট হয়ে যাবে
+              type="button"
               onClick={() => handleDemoLogin("admin")}
               className="px-3 py-2 text-xs font-medium text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 hover:border-neutral-300 transition active:scale-[0.98] cursor-pointer"
             >

@@ -1,7 +1,8 @@
 @import "tailwindcss";
-@import "tailwindcss";
 
-/* 💡 GLOBAL DESIGN SYSTEM */
+/* ==========================================================================
+   🧵 1. GLOBAL BASE REFINEMENT
+   ========================================================================== */
 @layer base {
   body {
     background-color: #fafafa;
@@ -13,22 +14,50 @@
       "Segoe UI",
       Roboto,
       sans-serif;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* স্মুথ স্ক্রলিং ও সিলেকশন টোন */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background-color: #171717;
+    color: #ffffff;
   }
 }
 
-/* ✨ REUSABLE MINIMAL UTILITIES */
+/* ==========================================================================
+   ✨ 2. REUSABLE PREMIUM UTILITIES (কার্ড ও লেআউট)
+   ========================================================================== */
 .premium-card {
   background: #ffffff;
   border: 1px solid #e5e5e5;
   border-radius: 1rem;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .premium-card:hover {
   border-color: #d4d4d4;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
 
+/* ফ্লোটিং ক্যাপসুল ন্যাভবার এর জন্য বিশেষ ইউটিলিটি */
+.capsule-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 229, 229, 0.7);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+}
+
+/* ==========================================================================
+   🎛️ 3. BUTTON SYSTEM (অ্যাকশন এলিমেন্টস)
+   ========================================================================== */
+/* প্রাইমারি ডার্ক বাটন */
 .btn-primary {
   background-color: #171717;
   color: #ffffff;
@@ -36,14 +65,91 @@
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  transition: all 0.2s;
+  border: 1px solid transparent;
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover {
   background-color: #262626;
 }
 
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* সেকেন্ডারি/আউটলাইন বাটন */
+.btn-secondary {
+  background-color: #ffffff;
+  color: #404040;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e5e5;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #f5f5f5;
+  color: #171717;
+  border-color: #d4d4d4;
+}
+
+/* ডেসট্রাক্টিভ বাটন (Remove/Delete এর জন্য শান্ত লুক) */
+.btn-destructive {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a3a3a3;
+  background-color: transparent;
+  border: 1px solid #e5e5e5;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-destructive:hover {
+  color: #dc2626;
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+}
+
+.btn-destructive:active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   📝 4. DATA ENTRY & INPUTS (ফর্ম এলিমেন্টস)
+   ========================================================================== */
+.ledger-input {
+  width: 100%;
+  font-size: 0.875rem;
+  padding: 0.625rem 0.875rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  color: #171717;
+  outline: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.ledger-input:focus {
+  border-color: #171717;
+  box-shadow: 0 0 0 1px #171717;
+}
+
+.ledger-input::placeholder {
+  color: #a3a3a3;
+}
+
+/* ==========================================================================
+   🏷️ 5. BADGES & TYPOGRAPHY METRICS
+   ========================================================================== */
 .badge-minimal {
   font-size: 0.6875rem;
   font-weight: 700;
@@ -53,4 +159,6 @@
   color: #525252;
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
+  display: inline-block;
+  border: 1px solid rgba(229, 229, 229, 0.4);
 }

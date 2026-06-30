@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance";
-import Loadding from "../components/Loadding";
+import CardSkelton from "../components/CardSkelton";
 
 const Home = () => {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  console.log(foods);
   useEffect(() => {
     axiosInstance
       .get("/foods")
@@ -34,10 +34,6 @@ const Home = () => {
     toast.success(`${food.name} added to cart!`);
   };
 
-  if (loading) {
-    return <Loadding />;
-  }
-
   return (
     <div className="min-h-screen">
       {/* 🍃 COMPACT MINIMAL HERO */}
@@ -52,17 +48,24 @@ const Home = () => {
             </p>
           </div>
 
-          {/* একটা সিম্পল স্ট্যাটাস বা ফিল্টার এরিয়া পরে চাইলে বসাতে পারেন */}
-          <div className="text-xs font-medium text-neutral-400 bg-neutral-50 px-3 py-1.5 rounded-lg border border-neutral-200/40 w-fit">
+          <div className="text-[10px] font-bold text-neutral-400 bg-neutral-50 px-3 py-1.5 rounded-lg border border-neutral-200/40 w-fit select-none uppercase tracking-wider">
             🟢 Kitchen is open • Fast delivery
           </div>
         </div>
       </header>
 
-      {/* 🛒 MAIN GRID */}
+      {/*  MAIN GRID */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {foods.length === 0 ? (
-          <div className="text-center py-16 premium-card max-w-sm mx-auto">
+        {loading ? (
+          /*SKELETON LOADING STATE */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, index) => (
+              <CardSkelton key={index} />
+            ))}
+          </div>
+        ) : foods.length === 0 ? (
+          /*  EMPTY STATE */
+          <div className="text-center py-16 premium-card max-w-sm mx-auto p-6">
             <h3 className="text-base font-semibold text-neutral-800">
               No foods available
             </h3>
@@ -71,31 +74,32 @@ const Home = () => {
             </p>
           </div>
         ) : (
+          /* 🍔 FOOD ITEMS MENU LIST */
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {foods.map((food) => (
               <div
                 key={food._id}
-                className="premium-card flex flex-col overflow-hidden"
+                className="premium-card flex flex-col overflow-hidden group"
               >
-                {/* Image */}
-                <div className="w-full h-44 bg-neutral-100 overflow-hidden relative">
+                {/* Food Image Wrapper */}
+                <div className="w-full h-44 bg-neutral-100 overflow-hidden relative border-b border-neutral-100">
                   <img
                     src={food.image}
                     alt={food.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
                     loading="lazy"
                   />
                   <div className="absolute top-2.5 left-2.5">
-                    <span className="badge-minimal shadow-sm bg-white/90 backdrop-blur-xs">
+                    <span className="badge-minimal bg-white/90 backdrop-blur-xs shadow-xs">
                       {food.category}
                     </span>
                   </div>
                 </div>
 
-                {/* Info & Action */}
+                {/* Food Content Details */}
                 <div className="p-4 flex-grow flex flex-col justify-between space-y-4">
                   <div>
-                    <h3 className="text-base font-bold text-neutral-800 line-clamp-1">
+                    <h3 className="text-base font-bold text-neutral-900 tracking-tight line-clamp-1">
                       {food.name}
                     </h3>
                     <p className="text-neutral-500 text-xs mt-1 line-clamp-2 leading-relaxed">
@@ -103,14 +107,15 @@ const Home = () => {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-neutral-100">
-                    <span className="text-lg font-extrabold text-neutral-900">
-                      ${food.price}
+                  {/* Price & Action Button */}
+                  <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                    <span className="text-lg font-mono font-bold text-neutral-900">
+                      ${Number(food.price).toFixed(2)}
                     </span>
 
                     <button
                       onClick={() => handleAddToCart(food)}
-                      className="btn-primary text-xs"
+                      className="btn-primary text-xs !py-2 !px-3.5 active:scale-95"
                     >
                       Add to Cart
                     </button>
